@@ -19,14 +19,6 @@ const WelcomeScreen = (props: Prop) => {
   return (
     <div className="welcome-screen">
       <h1>Welcome to The Memory Game</h1>
-      <div className="rules">
-        <h2>Rules:</h2>
-        <ul>
-          <li>Rule 1: Description of rule 1</li>
-          <li>Rule 2: Description of rule 2</li>
-          <li>Rule 3: Description of rule 3</li>
-        </ul>
-      </div>
       <div className="instructions">
         <h2>Instructions:</h2>
         <p style={{ whiteSpace: "break-spaces" }}>{instructions}</p>

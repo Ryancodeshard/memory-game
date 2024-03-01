@@ -46,21 +46,17 @@ const GameScreen = (props: Prop) => {
 
   const [curLevel, setCurLevel] = useState<number>(1);
   const { gridSize, numGreenSquares } = Levels[curLevel];
-  const divStyle = {
-    gridGap: `${gridSize}`,
-    gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
-  };
 
   return (
-    <>
+    <div>
       <button onClick={() => setAppState(AppState.gameover)}>Game over</button>
       <button onClick={() => setCurLevel((prev) => prev + 1)}>
         Next Level
       </button>
-      <div className="container" style={divStyle}>
+      <div className="container">
         <GameGrid gridSize={gridSize} numGreenSquares={numGreenSquares} />
       </div>
-    </>
+    </div>
   );
 };
 
