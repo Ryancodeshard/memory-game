@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AppState } from "../../enums/appState";
-import { Square } from "./components/Square";
 import "./index.css";
+import { GameGrid } from "./components/GameGrid";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
@@ -9,7 +9,7 @@ interface Prop {
 
 interface LevelDetails {
   gridSize: number;
-  greenSquares: number;
+  numGreenSquares: number;
 }
 
 const GameScreen = (props: Prop) => {
@@ -23,7 +23,7 @@ const GameScreen = (props: Prop) => {
       if (count === 9) continue;
       Levels[count] = {
         gridSize: i + 3,
-        greenSquares: i + j + 3,
+        numGreenSquares: i + j + 3,
       };
       count++;
     }
@@ -36,18 +36,19 @@ const GameScreen = (props: Prop) => {
   // Level 6: 5x5 grid, 5 green squares
   // Level 7: 5x5 grid, 6 green squares
 
-  Levels[8] = { gridSize: 5, greenSquares: 7 };
-  Levels[9] = { gridSize: 6, greenSquares: 6 };
-  Levels[10] = { gridSize: 7, greenSquares: 7 };
+  Levels[8] = { gridSize: 5, numGreenSquares: 7 };
+  Levels[9] = { gridSize: 6, numGreenSquares: 6 };
+  Levels[10] = { gridSize: 7, numGreenSquares: 7 };
 
   // Level 8: 5x5 grid, 7 green squares
   // Level 9: 6x6 grid, 6 green squares
   // Level 10: 7x7 grid, 7 green squares
 
   const [curLevel, setCurLevel] = useState<number>(1);
+  const { gridSize, numGreenSquares } = Levels[curLevel];
   const divStyle = {
-    gridGap: `${Levels[curLevel].gridSize}`,
-    gridTemplateColumns: `repeat(${Levels[curLevel].gridSize}, 1fr)`,
+    gridGap: `${gridSize}`,
+    gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
   };
 
   return (
@@ -57,11 +58,7 @@ const GameScreen = (props: Prop) => {
         Next Level
       </button>
       <div className="container" style={divStyle}>
-        {Array(Levels[curLevel].gridSize * Levels[curLevel].gridSize)
-          .fill(0)
-          .map((_, i) => (
-            <Square key={i} />
-          ))}
+        <GameGrid gridSize={gridSize} numGreenSquares={numGreenSquares} />
       </div>
     </>
   );
