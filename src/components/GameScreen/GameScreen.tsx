@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { AppState } from "../../enums/appState";
+import { AppState } from "../../enums/AppState";
 import "./index.css";
 import { GameGrid } from "./components/GameGrid";
+import { GameInfo } from "./components/GameInfo";
+import { useGameFSM } from "../../hooks/useGameFSM";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
@@ -39,36 +41,22 @@ const GameScreen = (props: Prop) => {
   // Level 10: 7x7 grid, 7 green squares
 
   const [curLevel, setCurLevel] = useState<number>(1);
-  const [curTime, setCurTime] = useState(10);
   const { gridSize, numGreenSquares } = Levels[curLevel];
+  const { curState, curTime } = useGameFSM();
 
-  useEffect(() => {
-    const timer = (setCurTime: any) => {
-      const interval = setInterval(() => {
-        setCurTime((prevCount: number) => prevCount - 1);
-      }, 1000);
-
-      // Clear the interval after 10 seconds
-      setTimeout(() => {
-        clearInterval(interval);
-      }, 10000);
-
-      // Clean up the interval on unmount
-      return () => clearInterval(interval);
-    };
-    timer(setCurTime);
-  }, [curLevel]);
-
-  // GameLogic();
   return (
     <div>
-      <div>{curTime}</div>
+      <GameInfo curTime={curTime} />
       <button onClick={() => setAppState(AppState.gameover)}>Game over</button>
       <button onClick={() => setCurLevel((prev) => prev + 1)}>
         Next Level
       </button>
       <div className="container">
-        <GameGrid gridSize={gridSize} numGreenSquares={numGreenSquares} />
+        <GameGrid
+          curState={curState}
+          gridSize={gridSize}
+          numGreenSquares={numGreenSquares}
+        />
       </div>
     </div>
   );

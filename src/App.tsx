@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./App.css";
 import { WelcomeScreen } from "./components/WelcomeScreen";
-import { AppState } from "./enums/appState";
+import { AppState } from "./enums/AppState";
 import { GameScreen } from "./components/GameScreen";
 import { GameOverScreen } from "./components/GameOverScreen";
 import { GameSuccessScreen } from "./components/GameSuccessScreen";

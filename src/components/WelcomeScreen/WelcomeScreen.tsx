@@ -1,6 +1,6 @@
 import React from "react";
 import "./index.css"; // Import CSS file for styling
-import { AppState } from "../../enums/appState";
+import { AppState } from "../../enums/AppState";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;

@@ -1,4 +1,4 @@
-import { AppState } from "../../enums/appState";
+import { AppState } from "../../enums/AppState";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;

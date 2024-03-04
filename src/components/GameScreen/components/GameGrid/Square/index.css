@@ -1,7 +1,13 @@
-
-.item {
+.gray-sq {
   aspect-ratio: 1;
-  background-color: #f7ffeae2;
   text-align: center;
   display: inline-block;
+  background-color: #f7ffeae2;
+}
+
+.green-sq {
+  aspect-ratio: 1;
+  text-align: center;
+  display: inline-block;
+  background-color: #22ff00;
 }
