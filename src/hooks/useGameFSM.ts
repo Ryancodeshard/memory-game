@@ -1,13 +1,55 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { GameState } from "../enums/GameState";
+import shuffle from "../components/GameScreen/components/GameGrid/_helper/shuffle";
 
-const useGameFSM = () => {
-  const stateMap = [GameState.transition, GameState.memorize, GameState.transition, GameState.guess, GameState.result];
+interface Prop{
+  gridSize: number;
+  numGreenSquares: number;
+}
+
+const useGameFSM = (prop:Prop) => {
+  const {gridSize, numGreenSquares} = prop;
+  const stateMap = [
+    // GameState.transition,
+    // GameState.memorize,
+    // GameState.transition,
+    GameState.guess, 
+    GameState.result
+  ];
   const [curStateIndex, setCurStateIndex] = useState<number>(0);
   const [curState, setCurState] = useState<GameState>(stateMap[curStateIndex]);
   const [curTime, setCurTime] = useState<number>(0);
   let interval: NodeJS.Timer;
   let timeout: NodeJS.Timeout;
+  const [grids, setGrids] = useState<number[]>(Array.from({ length: gridSize ** 2 }, (_, i) => i))
+  const [greenSquares, setGreenSquares] = useState<boolean[]>([]);
+  const [guessSquares, setGuessSquares] = useState<Set<number>>(new Set([]));
+  const [results, setResults] = useState<{correct:number,wrong:number,missed:number}>({correct:0,wrong:0,missed:0});
+
+  const calculateResults = () => {
+    for (let i=0;i<=grids.length;i++){
+      if (greenSquares[i] && guessSquares.has(i)) setResults((prev)=>({...prev, correct: prev.correct+1}))
+      if (greenSquares[i] && !guessSquares.has(i)) setResults((prev)=>({...prev, missed: prev.missed+1}))
+      else if (!greenSquares[i] && guessSquares.has(i)) setResults((prev)=>({...prev, wrong: prev.wrong+1}))
+    }
+  }
+
+  useEffect(()=>{
+    // Intialisation
+    setGrids(Array.from({ length: gridSize ** 2 }, (_, i) => i));
+    const greens = new Set(shuffle(grids).slice(0, numGreenSquares));
+    setGreenSquares(Array.from({ length: gridSize ** 2 }, (_, i) => greens.has(i)))
+    setGuessSquares(new Set([]))
+    setResults({correct:0,wrong:0,missed:0})
+  },[gridSize, numGreenSquares])
+
+  const guessSq = useCallback((index: number) => {
+    console.log("Guessing", index);
+    let gs = guessSquares;
+    gs.add(index);
+    setGuessSquares(gs);
+    if (curState===GameState.guess && guessSquares.size>=numGreenSquares) nextState();
+  },[guessSquares]);
 
   const clearTimer = () => {
     if (interval || timeout) {
@@ -53,17 +95,21 @@ const useGameFSM = () => {
         timer(3);
         break;
       case GameState.guess:
+        timer(5);
+        break;
       case GameState.memorize:
-        timer(10);
+        timer(5);
         break;
       case GameState.result:
+        // Caclulate results
+        calculateResults();
         break;
     }
     // Clean up the interval on unmount
     return () => clearTimer();
   }, [curState]);
 
-  return { curState, curTime, resetGame };
+  return { curState, curTime, resetGame, grids, gridSize, guessSq, greenSquares, guessSquares, results };
 };
 
 export default useGameFSM;

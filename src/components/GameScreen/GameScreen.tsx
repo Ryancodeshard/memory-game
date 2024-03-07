@@ -41,12 +41,21 @@ const GameScreen = (props: Prop) => {
   // Level 10: 7x7 grid, 7 green squares
 
   const [curLevel, setCurLevel] = useState<number>(1);
-  const { gridSize, numGreenSquares } = Levels[curLevel];
-  const { curState, curTime, resetGame } = useGameFSM();
+  const {
+    curState,
+    curTime,
+    resetGame,
+    grids,
+    gridSize,
+    guessSq,
+    greenSquares,
+    guessSquares,
+    results,
+  } = useGameFSM(Levels[curLevel]);
 
   return (
     <div>
-      <GameInfo curTime={curTime} curState={curState} />
+      <GameInfo curTime={curTime} curState={curState} results={results} />
       <button onClick={() => setAppState(AppState.gameover)}>Game over</button>
       <button
         onClick={() => {
@@ -59,8 +68,11 @@ const GameScreen = (props: Prop) => {
       <div className="container">
         <GameGrid
           curState={curState}
+          grids={grids}
           gridSize={gridSize}
-          numGreenSquares={numGreenSquares}
+          guessSq={guessSq}
+          greenSquares={greenSquares}
+          guessSquares={guessSquares}
         />
       </div>
     </div>

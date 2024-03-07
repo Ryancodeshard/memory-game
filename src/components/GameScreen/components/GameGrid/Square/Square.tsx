@@ -1,25 +1,62 @@
-import { useEffect, useState } from "react";
+import { useRef, useState } from "react";
 import "./index.css";
 
-interface Prop {
-  index: number;
+interface GuessProp {
+  guessSq: () => void;
   isGreen: boolean;
-  isShown: boolean;
-  removeSq: (index: number) => boolean;
+  isGuessed: boolean;
 }
 
-const Square = (prop: Prop) => {
-  const { index, isShown, isGreen, removeSq } = prop;
-  const [isShowing, setIsShowing] = useState(isShown);
+const GuessSquare = (prop: GuessProp) => {
+  const { guessSq, isGreen, isGuessed } = prop;
+  const [guessed, setGuessed] = useState(false);
+  console.log("guess status", guessed);
   return (
-    <div
-      onClick={() => {
-        removeSq(index);
-        setIsShowing(false);
-      }}
-      className={isGreen && isShown ? "green-sq" : "gray-sq"}
-    />
+    <>
+      {!guessed ? (
+        <div
+          onClick={() => {
+            guessSq();
+            setGuessed(true);
+            console.log("SeTTING TO", guessed);
+          }}
+          className="gray-sq"
+        />
+      ) : isGreen ? (
+        <div className="green-sq" />
+      ) : (
+        <div className="red-sq" />
+      )}
+    </>
   );
 };
 
-export { Square };
+interface MemProp {
+  isGreen: boolean;
+}
+
+const MemSquare = (prop: MemProp) => {
+  const { isGreen } = prop;
+  return <div className={isGreen ? "green-sq" : "gray-sq"} />;
+};
+
+interface ResultProp {
+  isGreen: boolean;
+  isGuessed: boolean;
+}
+
+const ResultSquare = (prop: ResultProp) => {
+  const { isGreen, isGuessed } = prop;
+
+  const Result = () => {
+    if (isGuessed || isGreen) {
+      if (!isGreen) return <div className="red-sq" />;
+      if (!isGuessed) return <div className="blue-sq" />;
+      else return <div className="green-sq" />;
+    } else return <div className="gray-sq" />;
+  };
+
+  return <Result />;
+};
+
+export { GuessSquare, MemSquare, ResultSquare };

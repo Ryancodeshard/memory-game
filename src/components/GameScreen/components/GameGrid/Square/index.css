@@ -11,3 +11,17 @@
   display: inline-block;
   background-color: #22ff00;
 }
+
+.red-sq {
+  aspect-ratio: 1;
+  text-align: center;
+  display: inline-block;
+  background-color: #ff0000;
+}
+
+.blue-sq {
+  aspect-ratio: 1;
+  text-align: center;
+  display: inline-block;
+  background-color: #001eff;
+}

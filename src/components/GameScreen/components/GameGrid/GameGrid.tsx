@@ -1,35 +1,53 @@
-import shuffle from "./_helper/shuffle";
-import { Square } from "./Square";
+import { GuessSquare, MemSquare, ResultSquare } from "./Square";
 import "./index.css";
 import { GameState } from "../../../../enums/GameState";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 
 interface Prop {
   curState: GameState;
+  grids: number[];
   gridSize: number;
-  numGreenSquares: number;
+  guessSq: (index: number) => void;
+  greenSquares: boolean[];
+  guessSquares: Set<number>;
 }
 
-const GameGrid = (props: Prop) => {
-  const { curState, gridSize, numGreenSquares } = props;
+const GameGrid = memo((props: Prop) => {
+  const { curState, grids, gridSize, guessSq, greenSquares, guessSquares } =
+    props;
   const divStyle = {
     gridGap: `${10 - gridSize}`,
     gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
   };
 
-  const grids = Array.from({ length: gridSize ** 2 }, (_, i) => i);
-  const greens = new Set(shuffle(grids).slice(0, numGreenSquares));
-  const [greenSquares, setGreenSquares] = useState(
-    Array.from({ length: gridSize ** 2 }, (_, i) => greens.has(i))
-  );
-  const removeSq = (index: number) => {
-    console.log("Removing index", index);
-    let gs = greenSquares;
-    gs[index] = false;
-    setGreenSquares(gs);
-    return true;
+  const Square = (prop: { index: any }) => {
+    const { index } = prop;
+    return useMemo(() => {
+      switch (curState) {
+        case GameState.transition:
+          return <></>;
+        case GameState.guess:
+          return (
+            <GuessSquare
+              isGreen={greenSquares[index]}
+              guessSq={() => guessSq(index)}
+              isGuessed={guessSquares.has(index)}
+            />
+          );
+        case GameState.memorize:
+          return <MemSquare isGreen={greenSquares[index]} />;
+        case GameState.result:
+          return (
+            <ResultSquare
+              isGreen={greenSquares[index]}
+              isGuessed={guessSquares.has(index)}
+            />
+          );
+      }
+    }, [curState]);
   };
 
+  // mem->guess (click on green)
   useEffect(() => {
     console.log("State: ", GameState[curState]);
   }, [curState]);
@@ -37,16 +55,10 @@ const GameGrid = (props: Prop) => {
   return (
     <div className="grid" style={divStyle}>
       {grids.map((_, i) => (
-        <Square
-          key={i}
-          index={i}
-          isGreen={greenSquares[i]}
-          isShown={[GameState.memorize, GameState.result].includes(curState)}
-          removeSq={removeSq}
-        />
+        <Square key={i} index={i} />
       ))}
     </div>
   );
-};
+});
 
 export { GameGrid };
