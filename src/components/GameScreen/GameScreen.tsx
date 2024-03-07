@@ -3,7 +3,7 @@ import { AppState } from "../../enums/AppState";
 import "./index.css";
 import { GameGrid } from "./components/GameGrid";
 import { GameInfo } from "./components/GameInfo";
-import { useGameFSM } from "../../hooks/useGameFSM";
+import useGameFSM from "../../hooks/useGameFSM";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
@@ -42,13 +42,18 @@ const GameScreen = (props: Prop) => {
 
   const [curLevel, setCurLevel] = useState<number>(1);
   const { gridSize, numGreenSquares } = Levels[curLevel];
-  const { curState, curTime } = useGameFSM();
+  const { curState, curTime, resetGame } = useGameFSM();
 
   return (
     <div>
-      <GameInfo curTime={curTime} />
+      <GameInfo curTime={curTime} curState={curState} />
       <button onClick={() => setAppState(AppState.gameover)}>Game over</button>
-      <button onClick={() => setCurLevel((prev) => prev + 1)}>
+      <button
+        onClick={() => {
+          setCurLevel((prev) => prev + 1);
+          resetGame();
+        }}
+      >
         Next Level
       </button>
       <div className="container">

@@ -12,8 +12,6 @@ interface Prop {
 
 const GameGrid = (props: Prop) => {
   const { curState, gridSize, numGreenSquares } = props;
-
-  console.log(curState === GameState.memorize);
   const divStyle = {
     gridGap: `${10 - gridSize}`,
     gridTemplateColumns: `repeat(${gridSize}, 1fr)`,
@@ -33,7 +31,7 @@ const GameGrid = (props: Prop) => {
   };
 
   useEffect(() => {
-    console.log("Cur state", GameState[curState]);
+    console.log("State: ", GameState[curState]);
   }, [curState]);
 
   return (
