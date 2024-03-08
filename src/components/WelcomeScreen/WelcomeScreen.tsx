@@ -4,6 +4,10 @@ import { AppState } from "../../enums/AppState";
 import { Flex, Input } from "@chakra-ui/react";
 import { userStore } from "../../store/userStore";
 import { Leaderboard } from "../LeaderBoard";
+import startSfx from "../../gameSounds/luigi-here-we-go.mp3";
+import countdown from "../../gameSounds/mariostart.mp3";
+import selectplayer from "../../gameSounds/mk64_mario_a09_Cm01NqU.mp3";
+import useSound from "use-sound";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
@@ -11,14 +15,21 @@ interface Prop {
 
 const WelcomeScreen = (props: Prop) => {
   const { setAppState } = props;
-  const { setUsername, resetScore } = userStore();
+  const { username, setUsername, resetScore } = userStore();
+  const [herewego] = useSound(startSfx);
+  const [beep] = useSound(countdown);
+  const [selectplayersfx] = useSound(selectplayer);
   let nameRef = useRef<any>();
   const handleClick = () => {
-    const username =
-      nameRef.current.value === "" ? "Unknown" : nameRef.current.value;
-    setUsername(username);
+    if (nameRef.current.value === "") {
+      selectplayersfx();
+      return;
+    }
+    setUsername(nameRef.current.value);
     setAppState(AppState.playing);
     resetScore();
+    herewego();
+    beep();
   };
 
   const instructions = `
@@ -40,10 +51,12 @@ const WelcomeScreen = (props: Prop) => {
       </div>
       <Flex direction={"column"} align={"center"} gap={5}>
         <Input
+          defaultValue={username}
           width={"50%"}
           maxW={"200px"}
           placeholder="Username"
           ref={nameRef}
+          required
         />
         <button onClick={handleClick} className="start-button">
           Start Game

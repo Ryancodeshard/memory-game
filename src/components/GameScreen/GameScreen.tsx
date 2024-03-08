@@ -7,6 +7,10 @@ import useGameFSM from "../../hooks/useGameFSM";
 import { GameState } from "../../enums/GameState";
 import { Transition } from "./components/Transition";
 import { Button } from "@chakra-ui/react";
+import countdown from "../../gameSounds/mariostart.mp3";
+import success from "../../gameSounds/mk64_firstplace-1.mp3";
+import selectplayer from "../../gameSounds/mk64_mario_a09_Cm01NqU.mp3";
+import useSound from "use-sound";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
@@ -19,6 +23,9 @@ interface LevelDetails {
 
 const GameScreen = (props: Prop) => {
   const { setAppState } = props;
+  const [beepsfx] = useSound(countdown);
+  const [succsfx] = useSound(success);
+  const [selectplayersfx] = useSound(selectplayer);
 
   const Levels: { [key: number]: LevelDetails } = {
     1: { gridSize: 3, numGreenSquares: 3 },
@@ -64,10 +71,13 @@ const GameScreen = (props: Prop) => {
         <Button
           width="50%"
           onClick={() => {
-            if (curLevel === Object.keys(Levels).length - 1)
+            if (curLevel === Object.keys(Levels).length - 1) {
               setAppState(AppState.gamesuccess);
+              succsfx();
+            }
             setCurLevel((prev) => prev + 1);
             resetGame();
+            beepsfx();
           }}
         >
           Next Level
@@ -79,6 +89,7 @@ const GameScreen = (props: Prop) => {
           width="50%"
           onClick={() => {
             setAppState(AppState.welcome);
+            selectplayersfx();
           }}
         >
           Play Again?

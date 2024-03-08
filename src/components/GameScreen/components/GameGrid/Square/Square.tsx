@@ -1,5 +1,8 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import "./index.css";
+import wrong from "../../../../../gameSounds/death_E1a7HAQ.mp3";
+import correct from "../../../../../gameSounds/nintendo-game-boy-startup.mp3";
+import useSound from "use-sound";
 
 interface GuessProp {
   guessSq: () => void;
@@ -7,6 +10,8 @@ interface GuessProp {
 }
 
 const GuessSquare = (prop: GuessProp) => {
+  const [correctsfx] = useSound(correct);
+  const [wrongsfx] = useSound(wrong);
   const { guessSq, isGreen } = prop;
   const [guessed, setGuessed] = useState(false);
   return (
@@ -16,6 +21,8 @@ const GuessSquare = (prop: GuessProp) => {
           onClick={() => {
             guessSq();
             setGuessed(true);
+            if (isGreen) correctsfx();
+            else wrongsfx();
           }}
           className="gray-sq"
         />

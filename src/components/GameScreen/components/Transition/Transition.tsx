@@ -1,7 +1,9 @@
 import { useTransition, animated } from "@react-spring/web";
 
 import "./index.css";
+import { useEffect } from "react";
 
+import useSound from "use-sound";
 interface Prop {
   curTime: number;
   nextState: string;
@@ -29,7 +31,6 @@ const Transition = (props: Prop) => {
     leave: [{ opacity: 0, height: 0, color: "#ff0000e7" }],
     update: { color: "#28b4d7" },
   });
-
   return (
     <div className="center">
       <div>{`Level ${curLevel}`}</div>

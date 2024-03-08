@@ -46,7 +46,9 @@ const GameInfo = (props: Prop) => {
   return (
     <div>
       {curState === GameState.result ? (
-        <InfoStates />
+        <div style={{ height: "200px", padding: "50px" }}>
+          <InfoStates />
+        </div>
       ) : (
         <div className="game-text">
           {transitions(({ innerHeight, ...rest }, item) => (

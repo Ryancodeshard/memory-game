@@ -2,6 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { GameState } from "../enums/GameState";
 import shuffle from "../components/GameScreen/components/GameGrid/_helper/shuffle";
 import { userStore } from "../store/userStore";
+import nextlevel from "../gameSounds/mario-kart-lap-2.mp3"
+import fail from "../gameSounds/super-mario-death-sound-sound-effect.mp3"
+import useSound from "use-sound";
 
 interface Prop{
   gridSize: number;
@@ -11,6 +14,8 @@ interface Prop{
 const timeForEachRound = 10
 
 const useGameFSM = (props:Prop) => {
+  const [nextlevelsfx] = useSound(nextlevel)
+  const [failsfx] = useSound(fail);
   const {gridSize, numGreenSquares} = props;
   const stateMap = useMemo(() => [
     GameState.transition,
@@ -20,6 +25,7 @@ const useGameFSM = (props:Prop) => {
     GameState.result
   ], []);
   const [curStateIndex, setCurStateIndex] = useState<number>(0);
+  const nextState = stateMap[curStateIndex+1]
   const [curState, setCurState] = useState<GameState>(stateMap[curStateIndex]);
   const [curTime, setCurTime] = useState<number>(3);
   let interval: NodeJS.Timer;
@@ -32,34 +38,24 @@ const useGameFSM = (props:Prop) => {
   const {addToLeaderBoard, updateScore} = userStore();
 
   const calculateResults = () => {
+    let res = results;
     for (let i=0;i<=grids.length;i++){
-      if (greenSquares[i] && guessSquares.has(i)) setResults((prev)=>({...prev, correct: prev.correct+1}))
-      else if (greenSquares[i] && !guessSquares.has(i)) setResults((prev)=>({...prev, missed: prev.missed+1}))
-      else if (!greenSquares[i] && guessSquares.has(i)) setResults((prev)=>({...prev, wrong: prev.wrong+1}))
+      if (greenSquares[i] && guessSquares.has(i)) res = {...res, correct: res.correct+1}
+      else if (greenSquares[i] && !guessSquares.has(i)) res = {...res, missed: res.missed+1}
+      else if (!greenSquares[i] && guessSquares.has(i)) res = {...res, wrong: res.wrong+1}
     }
+    return res
   }
-
-  useEffect(()=>{
-    if (results.correct+results.missed+results.wrong===0) return
-    if (results.missed + results.wrong > 0) addToLeaderBoard();
-    else updateScore(timeForEachRound-curTime);
-  },[results, addToLeaderBoard, updateScore])
-
-  useEffect(()=>{
-    // Intialisation
-    setGrids(Array.from({ length: gridSize ** 2 }, (_, i) => i));
-    const greens = new Set(shuffle(grids).slice(0, numGreenSquares));
-    setGreenSquares(Array.from({ length: gridSize ** 2 }, (_, i) => greens.has(i)))
-    setGuessSquares(new Set([]))
-  },[gridSize, numGreenSquares])
-
-  const nextState = stateMap[curStateIndex+1]
 
   const guessSq = useCallback((index: number) => {
     let gs = guessSquares;
     gs.add(index);
     setGuessSquares(gs);
-    if (curState===GameState.guess && guessSquares.size>=numGreenSquares) goToNextState();
+    if (curState===GameState.guess && guessSquares.size>=numGreenSquares) {
+      if (calculateResults().correct===numGreenSquares) nextlevelsfx();
+      else failsfx();
+      goToNextState();
+    }
   },[guessSquares,curState, numGreenSquares]);
 
   const clearTimer = () => {
@@ -91,10 +87,24 @@ const useGameFSM = (props:Prop) => {
     setCurStateIndex(0);
   };
 
+  useEffect(()=>{
+    if (results.correct+results.missed+results.wrong===0) return
+    if (results.missed + results.wrong > 0) addToLeaderBoard();
+    else updateScore(timeForEachRound-curTime);
+  },[results, addToLeaderBoard, updateScore])
+
+  useEffect(()=>{
+    // Intialisation
+    setGrids(Array.from({ length: gridSize ** 2 }, (_, i) => i));
+    const greens = new Set(shuffle(grids).slice(0, numGreenSquares));
+    setGreenSquares(Array.from({ length: gridSize ** 2 }, (_, i) => greens.has(i)))
+    setGuessSquares(new Set([]))
+  },[gridSize, numGreenSquares])
+
   useEffect(() => {
     if (curStateIndex !== -1 && curStateIndex < stateMap.length) {
       setCurState(stateMap[curStateIndex]);
-    } 
+    }
   }, [curStateIndex, stateMap]);
 
   useEffect(() => {
@@ -109,7 +119,7 @@ const useGameFSM = (props:Prop) => {
         timer(timeForEachRound);
         break;
       case GameState.result:
-        calculateResults();
+        setResults(calculateResults());
         break;
     }
     // Clean up the interval on unmount
