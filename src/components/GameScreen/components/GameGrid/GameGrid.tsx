@@ -31,7 +31,6 @@ const GameGrid = memo((props: Prop) => {
             <GuessSquare
               isGreen={greenSquares[index]}
               guessSq={() => guessSq(index)}
-              isGuessed={guessSquares.has(index)}
             />
           );
         case GameState.memorize:

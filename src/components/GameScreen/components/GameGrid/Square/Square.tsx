@@ -4,13 +4,11 @@ import "./index.css";
 interface GuessProp {
   guessSq: () => void;
   isGreen: boolean;
-  isGuessed: boolean;
 }
 
 const GuessSquare = (prop: GuessProp) => {
-  const { guessSq, isGreen, isGuessed } = prop;
+  const { guessSq, isGreen } = prop;
   const [guessed, setGuessed] = useState(false);
-  console.log("guess status", guessed);
   return (
     <>
       {!guessed ? (
@@ -18,7 +16,6 @@ const GuessSquare = (prop: GuessProp) => {
           onClick={() => {
             guessSq();
             setGuessed(true);
-            console.log("SeTTING TO", guessed);
           }}
           className="gray-sq"
         />

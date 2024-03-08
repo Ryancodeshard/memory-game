@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AppState } from "../../enums/AppState";
 import "./index.css";
 import { GameGrid } from "./components/GameGrid";
@@ -57,6 +57,35 @@ const GameScreen = (props: Prop) => {
     nextState,
   } = useGameFSM(Levels[curLevel]);
 
+  const NextButton = () => {
+    if (curState !== GameState.result) return <></>;
+    if (results.wrong + results.missed === 0)
+      return (
+        <Button
+          width="50%"
+          onClick={() => {
+            if (curLevel === Object.keys(Levels).length - 1)
+              setAppState(AppState.welcome);
+            setCurLevel((prev) => prev + 1);
+            resetGame();
+          }}
+        >
+          Next Level
+        </Button>
+      );
+    else
+      return (
+        <Button
+          width="50%"
+          onClick={() => {
+            setAppState(AppState.welcome);
+          }}
+        >
+          Play Again?
+        </Button>
+      );
+  };
+
   return (
     <div className="parent">
       {curState !== GameState.transition && (
@@ -77,32 +106,7 @@ const GameScreen = (props: Prop) => {
         )}
       </div>
       <div>
-        {curState === GameState.result ? (
-          results.wrong + results.missed === 0 ? (
-            <Button
-              width="50%"
-              onClick={() => {
-                if (curLevel === Object.keys(Levels).length - 1)
-                  setAppState(AppState.welcome);
-                setCurLevel((prev) => prev + 1);
-                resetGame();
-              }}
-            >
-              Next Level
-            </Button>
-          ) : (
-            <Button
-              width="50%"
-              onClick={() => {
-                setAppState(AppState.welcome);
-              }}
-            >
-              Play Again?
-            </Button>
-          )
-        ) : (
-          <></>
-        )}
+        <NextButton />
       </div>
     </div>
   );

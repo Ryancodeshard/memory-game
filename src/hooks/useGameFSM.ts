@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { GameState } from "../enums/GameState";
 import shuffle from "../components/GameScreen/components/GameGrid/_helper/shuffle";
+import { userStore } from "../store/userStore";
 
 interface Prop{
   gridSize: number;
@@ -27,13 +28,22 @@ const useGameFSM = (props:Prop) => {
   const [guessSquares, setGuessSquares] = useState<Set<number>>(new Set([]));
   const [results, setResults] = useState<{correct:number,wrong:number,missed:number}>({correct:0,wrong:0,missed:0});
 
+  const {addToLeaderBoard, updateScore} = userStore();
+
   const calculateResults = () => {
+    console.log("calculating results...")
     for (let i=0;i<=grids.length;i++){
       if (greenSquares[i] && guessSquares.has(i)) setResults((prev)=>({...prev, correct: prev.correct+1}))
-      if (greenSquares[i] && !guessSquares.has(i)) setResults((prev)=>({...prev, missed: prev.missed+1}))
+      else if (greenSquares[i] && !guessSquares.has(i)) setResults((prev)=>({...prev, missed: prev.missed+1}))
       else if (!greenSquares[i] && guessSquares.has(i)) setResults((prev)=>({...prev, wrong: prev.wrong+1}))
     }
   }
+
+  useEffect(()=>{
+    if (results.correct+results.missed+results.wrong===0) return
+    if (results.missed + results.wrong > 0) addToLeaderBoard();
+    else updateScore(curTime);
+  },[results])
 
   useEffect(()=>{
     // Intialisation
@@ -41,7 +51,6 @@ const useGameFSM = (props:Prop) => {
     const greens = new Set(shuffle(grids).slice(0, numGreenSquares));
     setGreenSquares(Array.from({ length: gridSize ** 2 }, (_, i) => greens.has(i)))
     setGuessSquares(new Set([]))
-    setResults({correct:0,wrong:0,missed:0})
   },[gridSize, numGreenSquares])
 
   const nextState = stateMap[curStateIndex+1]
@@ -58,7 +67,6 @@ const useGameFSM = (props:Prop) => {
     if (interval || timeout) {
       clearInterval(interval);
       clearTimeout(timeout)
-      console.log("Cleared timer");
     }
   };
 
@@ -104,7 +112,6 @@ const useGameFSM = (props:Prop) => {
         timer(5);
         break;
       case GameState.result:
-        // Caclulate results
         calculateResults();
         break;
     }
