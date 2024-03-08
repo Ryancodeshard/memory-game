@@ -1,7 +1,7 @@
 import { GuessSquare, MemSquare, ResultSquare } from "./Square";
 import "./index.css";
 import { GameState } from "../../../../enums/GameState";
-import { memo, useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo } from "react";
 
 interface Prop {
   curState: GameState;
@@ -25,7 +25,7 @@ const GameGrid = memo((props: Prop) => {
     return useMemo(() => {
       switch (curState) {
         case GameState.transition:
-          return <></>;
+          return <>This should not appear</>;
         case GameState.guess:
           return (
             <GuessSquare
@@ -44,7 +44,7 @@ const GameGrid = memo((props: Prop) => {
             />
           );
       }
-    }, [curState]);
+    }, [index]);
   };
 
   // mem->guess (click on green)

@@ -1,0 +1,13 @@
+.game-text {
+  font-size: 4em;
+  font-weight: 800;
+  color: #b6a38f;
+  text-transform: uppercase;
+}
+
+.normal-text {
+  font-size: 2em;
+  font-weight: 800;
+  color: #ffbf7a;
+  text-transform: uppercase;
+}

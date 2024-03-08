@@ -7,18 +7,19 @@ interface Prop{
   numGreenSquares: number;
 }
 
-const useGameFSM = (prop:Prop) => {
-  const {gridSize, numGreenSquares} = prop;
+const useGameFSM = (props:Prop) => {
+  const {gridSize, numGreenSquares} = props;
+  const [leaderboard, setLeaderboard] = useState();
   const stateMap = [
-    // GameState.transition,
-    // GameState.memorize,
-    // GameState.transition,
+    GameState.transition,
+    GameState.memorize,
+    GameState.transition,
     GameState.guess, 
     GameState.result
   ];
   const [curStateIndex, setCurStateIndex] = useState<number>(0);
   const [curState, setCurState] = useState<GameState>(stateMap[curStateIndex]);
-  const [curTime, setCurTime] = useState<number>(0);
+  const [curTime, setCurTime] = useState<number>(3);
   let interval: NodeJS.Timer;
   let timeout: NodeJS.Timeout;
   const [grids, setGrids] = useState<number[]>(Array.from({ length: gridSize ** 2 }, (_, i) => i))
@@ -43,13 +44,15 @@ const useGameFSM = (prop:Prop) => {
     setResults({correct:0,wrong:0,missed:0})
   },[gridSize, numGreenSquares])
 
+  const nextState = stateMap[curStateIndex+1]
+
   const guessSq = useCallback((index: number) => {
     console.log("Guessing", index);
     let gs = guessSquares;
     gs.add(index);
     setGuessSquares(gs);
-    if (curState===GameState.guess && guessSquares.size>=numGreenSquares) nextState();
-  },[guessSquares]);
+    if (curState===GameState.guess && guessSquares.size>=numGreenSquares) goToNextState();
+  },[guessSquares,curState]);
 
   const clearTimer = () => {
     if (interval || timeout) {
@@ -68,11 +71,11 @@ const useGameFSM = (prop:Prop) => {
     // Clear the interval after the specified time
     timeout = setTimeout(() => {
       clearTimer();
-      nextState();
+      goToNextState();
     }, time * 1000);
   };
 
-  const nextState = () => {
+  const goToNextState = () => {
     setCurStateIndex((prev) => prev + 1);
   };
 
@@ -109,7 +112,7 @@ const useGameFSM = (prop:Prop) => {
     return () => clearTimer();
   }, [curState]);
 
-  return { curState, curTime, resetGame, grids, gridSize, guessSq, greenSquares, guessSquares, results };
+  return { curState, curTime, resetGame, grids, gridSize, guessSq, greenSquares, guessSquares, results, nextState };
 };
 
 export default useGameFSM;

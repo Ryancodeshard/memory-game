@@ -1,9 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppState } from "../../enums/AppState";
 import "./index.css";
 import { GameGrid } from "./components/GameGrid";
 import { GameInfo } from "./components/GameInfo";
 import useGameFSM from "../../hooks/useGameFSM";
+import { GameState } from "../../enums/GameState";
+import { Transition } from "./components/Transition";
+import { Button } from "@chakra-ui/react";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
@@ -51,29 +54,55 @@ const GameScreen = (props: Prop) => {
     greenSquares,
     guessSquares,
     results,
+    nextState,
   } = useGameFSM(Levels[curLevel]);
 
   return (
-    <div>
-      <GameInfo curTime={curTime} curState={curState} results={results} />
-      <button onClick={() => setAppState(AppState.gameover)}>Game over</button>
-      <button
-        onClick={() => {
-          setCurLevel((prev) => prev + 1);
-          resetGame();
-        }}
-      >
-        Next Level
-      </button>
+    <div className="parent">
+      {curState !== GameState.transition && (
+        <GameInfo curTime={curTime} curState={curState} results={results} />
+      )}
       <div className="container">
-        <GameGrid
-          curState={curState}
-          grids={grids}
-          gridSize={gridSize}
-          guessSq={guessSq}
-          greenSquares={greenSquares}
-          guessSquares={guessSquares}
-        />
+        {curState === GameState.transition ? (
+          <Transition curTime={curTime} nextState={GameState[nextState]} />
+        ) : (
+          <GameGrid
+            curState={curState}
+            grids={grids}
+            gridSize={gridSize}
+            guessSq={guessSq}
+            greenSquares={greenSquares}
+            guessSquares={guessSquares}
+          />
+        )}
+      </div>
+      <div>
+        {curState === GameState.result ? (
+          results.wrong + results.missed === 0 ? (
+            <Button
+              width="50%"
+              onClick={() => {
+                if (curLevel === Object.keys(Levels).length - 1)
+                  setAppState(AppState.welcome);
+                setCurLevel((prev) => prev + 1);
+                resetGame();
+              }}
+            >
+              Next Level
+            </Button>
+          ) : (
+            <Button
+              width="50%"
+              onClick={() => {
+                setAppState(AppState.welcome);
+              }}
+            >
+              Play Again?
+            </Button>
+          )
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

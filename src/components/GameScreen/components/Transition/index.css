@@ -1,0 +1,24 @@
+.transitionsItem {
+  overflow: hidden;
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  will-change: transform, opacity, height;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  font-size: 4em;
+  font-weight: 800;
+  color: #b6a38f;
+  text-transform: uppercase;
+}

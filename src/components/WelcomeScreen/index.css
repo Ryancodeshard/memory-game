@@ -20,3 +20,8 @@
 .start-button:hover {
   background-color: #0056b3;
 }
+
+.input {
+  /* min-width: 100px; */
+  width: 50%;
+}
