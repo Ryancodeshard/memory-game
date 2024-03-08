@@ -16,21 +16,23 @@ const WelcomeScreen = (props: Prop) => {
   const handleClick = () => {
     const username =
       nameRef.current.value === "" ? "Unknown" : nameRef.current.value;
-    console.log(username);
     setUsername(username);
     setAppState(AppState.playing);
     resetScore();
   };
 
   const instructions = `
-    Memorize the locations of the green squares within a given countdown time.\n 
-    After the countdown, the green squares will vanish, then, click on the squares where the green ones were located. \n
-    Success in remembering all green squares advances to the next level. \n
+    1. Memorize the locations of the green squares within a given countdown time.
+    2. After the countdown, the green squares will vanish, then, click on the squares where the green ones were located.
+    3. Success in remembering all green squares advances to the next level.
     Have fun!
   `;
 
   return (
-    <div className="welcome-screen">
+    <div
+      className="welcome-screen normal-text"
+      style={{ fontSize: "1.2em", color: "black" }}
+    >
       <h1>Welcome to The Memory Game</h1>
       <div className="instructions">
         <h2>Instructions:</h2>

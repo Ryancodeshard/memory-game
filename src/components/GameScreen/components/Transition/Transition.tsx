@@ -5,10 +5,11 @@ import "./index.css";
 interface Prop {
   curTime: number;
   nextState: string;
+  curLevel: number;
 }
 
 const Transition = (props: Prop) => {
-  const { curTime, nextState } = props;
+  const { curTime, nextState, curLevel } = props;
   const transitions = useTransition(curTime, {
     from: {
       opacity: 1,
@@ -31,7 +32,8 @@ const Transition = (props: Prop) => {
 
   return (
     <div className="center">
-      {`Get Ready to ${nextState}!`}
+      <div>{`Level ${curLevel}`}</div>
+      <div>{`Time to ${nextState}!`}</div>
       {transitions(({ innerHeight, ...rest }, item) => (
         <animated.div className="transitionsItem" style={rest}>
           <animated.div style={{ overflow: "hidden", height: innerHeight }}>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AppState } from "../../enums/AppState";
 import "./index.css";
 import { GameGrid } from "./components/GameGrid";
@@ -65,7 +65,7 @@ const GameScreen = (props: Prop) => {
           width="50%"
           onClick={() => {
             if (curLevel === Object.keys(Levels).length - 1)
-              setAppState(AppState.welcome);
+              setAppState(AppState.gamesuccess);
             setCurLevel((prev) => prev + 1);
             resetGame();
           }}
@@ -93,7 +93,11 @@ const GameScreen = (props: Prop) => {
       )}
       <div className="container">
         {curState === GameState.transition ? (
-          <Transition curTime={curTime} nextState={GameState[nextState]} />
+          <Transition
+            curTime={curTime}
+            nextState={GameState[nextState]}
+            curLevel={curLevel}
+          />
         ) : (
           <GameGrid
             curState={curState}

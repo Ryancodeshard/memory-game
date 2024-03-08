@@ -40,8 +40,8 @@ const Leaderboard = () => {
                 <Thead>
                   <Tr>
                     <Th>Name</Th>
-                    <Th>Score</Th>
-                    <Th>Time</Th>
+                    <Th>Highest Level</Th>
+                    <Th>Time Taken</Th>
                   </Tr>
                 </Thead>
                 <Tbody>

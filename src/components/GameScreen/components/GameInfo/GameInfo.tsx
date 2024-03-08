@@ -1,6 +1,6 @@
 import { Text } from "@chakra-ui/react";
 import { GameState } from "../../../../enums/GameState";
-import { animated, update, useTransition } from "@react-spring/web";
+import { animated, useTransition } from "@react-spring/web";
 import "./index.css";
 interface Prop {
   curTime: number;

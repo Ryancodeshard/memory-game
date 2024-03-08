@@ -1,7 +1,7 @@
 import { GuessSquare, MemSquare, ResultSquare } from "./Square";
 import "./index.css";
 import { GameState } from "../../../../enums/GameState";
-import { memo, useEffect, useMemo } from "react";
+import { memo, useMemo } from "react";
 
 interface Prop {
   curState: GameState;
@@ -45,11 +45,6 @@ const GameGrid = memo((props: Prop) => {
       }
     }, [index]);
   };
-
-  // mem->guess (click on green)
-  useEffect(() => {
-    console.log("State: ", GameState[curState]);
-  }, [curState]);
 
   return (
     <div className="grid" style={divStyle}>

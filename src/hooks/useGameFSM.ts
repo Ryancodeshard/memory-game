@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { GameState } from "../enums/GameState";
 import shuffle from "../components/GameScreen/components/GameGrid/_helper/shuffle";
 import { userStore } from "../store/userStore";
@@ -8,16 +8,17 @@ interface Prop{
   numGreenSquares: number;
 }
 
+const timeForEachRound = 10
+
 const useGameFSM = (props:Prop) => {
   const {gridSize, numGreenSquares} = props;
-  const [leaderboard, setLeaderboard] = useState();
-  const stateMap = [
+  const stateMap = useMemo(() => [
     GameState.transition,
     GameState.memorize,
     GameState.transition,
     GameState.guess, 
     GameState.result
-  ];
+  ], []);
   const [curStateIndex, setCurStateIndex] = useState<number>(0);
   const [curState, setCurState] = useState<GameState>(stateMap[curStateIndex]);
   const [curTime, setCurTime] = useState<number>(3);
@@ -31,7 +32,6 @@ const useGameFSM = (props:Prop) => {
   const {addToLeaderBoard, updateScore} = userStore();
 
   const calculateResults = () => {
-    console.log("calculating results...")
     for (let i=0;i<=grids.length;i++){
       if (greenSquares[i] && guessSquares.has(i)) setResults((prev)=>({...prev, correct: prev.correct+1}))
       else if (greenSquares[i] && !guessSquares.has(i)) setResults((prev)=>({...prev, missed: prev.missed+1}))
@@ -42,8 +42,8 @@ const useGameFSM = (props:Prop) => {
   useEffect(()=>{
     if (results.correct+results.missed+results.wrong===0) return
     if (results.missed + results.wrong > 0) addToLeaderBoard();
-    else updateScore(curTime);
-  },[results])
+    else updateScore(timeForEachRound-curTime);
+  },[results, addToLeaderBoard, updateScore])
 
   useEffect(()=>{
     // Intialisation
@@ -56,12 +56,11 @@ const useGameFSM = (props:Prop) => {
   const nextState = stateMap[curStateIndex+1]
 
   const guessSq = useCallback((index: number) => {
-    console.log("Guessing", index);
     let gs = guessSquares;
     gs.add(index);
     setGuessSquares(gs);
     if (curState===GameState.guess && guessSquares.size>=numGreenSquares) goToNextState();
-  },[guessSquares,curState]);
+  },[guessSquares,curState, numGreenSquares]);
 
   const clearTimer = () => {
     if (interval || timeout) {
@@ -95,9 +94,7 @@ const useGameFSM = (props:Prop) => {
   useEffect(() => {
     if (curStateIndex !== -1 && curStateIndex < stateMap.length) {
       setCurState(stateMap[curStateIndex]);
-    } else {
-      console.log("Level Over");
-    }
+    } 
   }, [curStateIndex, stateMap]);
 
   useEffect(() => {
@@ -106,10 +103,10 @@ const useGameFSM = (props:Prop) => {
         timer(3);
         break;
       case GameState.guess:
-        timer(5);
+        timer(timeForEachRound);
         break;
       case GameState.memorize:
-        timer(5);
+        timer(timeForEachRound);
         break;
       case GameState.result:
         calculateResults();
