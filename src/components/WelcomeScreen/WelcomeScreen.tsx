@@ -53,7 +53,6 @@ const WelcomeScreen = (props: Prop) => {
       <Flex direction={"column"} align={"center"} gap={5}>
         <Input
           defaultValue={username}
-          autoFocus
           width={"50%"}
           maxW={"200px"}
           placeholder="Username"
