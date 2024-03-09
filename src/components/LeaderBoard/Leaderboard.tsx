@@ -71,7 +71,7 @@ const Leaderboard = () => {
         />
         <ModalContent style={{ padding: "10px" }}>
           <ModalHeader>Leaderboard</ModalHeader>
-          <Flex style={{ padding: "0 20px" }}>
+          <Flex padding={"0 20px"} alignItems={"center"}>
             View Stats
             <Switch
               marginLeft={"5px"}
@@ -79,11 +79,14 @@ const Leaderboard = () => {
               onChange={() => setStatsMode((prev) => !prev)}
             />
             <Spacer />
-            <IconButton
+            <Button
+              colorScheme="red"
               aria-label="wipe leaderboard"
               onClick={() => resetLeaderboard()}
-              icon={<RepeatIcon />}
-            />
+              rightIcon={<RepeatIcon />}
+            >
+              Clear Data
+            </Button>
           </Flex>
           <ModalCloseButton />
           <ModalBody maxHeight={"80vh"} overflow={"scroll"}>
