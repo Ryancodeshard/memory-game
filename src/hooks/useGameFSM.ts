@@ -52,7 +52,7 @@ const useGameFSM = (props:Prop) => {
     gs.add(index);
     setGuessSquares(gs);
     if (curState===GameState.guess && guessSquares.size>=numGreenSquares) {
-      if (calculateResults().correct===numGreenSquares) nextlevelsfx();
+      if (calculateResults().wrong+calculateResults().missed===0) nextlevelsfx();
       else failsfx();
       goToNextState();
     }
