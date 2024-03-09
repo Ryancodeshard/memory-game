@@ -3,6 +3,9 @@
   text-align: center;
   display: inline-block;
   background-color: #f7ffeae2;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 16px;
 }
 
 .green-sq {
@@ -10,6 +13,10 @@
   text-align: center;
   display: inline-block;
   background-color: #22ff00;
+  z-index: -1;
+  transform: scale(0.95);
+  border-radius: 16px;
+  box-shadow: inset 0px 5px 5px 1px rgba(0, 0, 0, 0.3);
 }
 
 .red-sq {
@@ -17,6 +24,9 @@
   text-align: center;
   display: inline-block;
   background-color: #ff0000;
+  transform: scale(0.95);
+  border-radius: 16px;
+  box-shadow: inset 0px 5px 5px 1px rgba(0, 0, 0, 0.3);
 }
 
 .blue-sq {
@@ -24,4 +34,7 @@
   text-align: center;
   display: inline-block;
   background-color: #001eff;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 5px solid rgba(144, 155, 255, 0.3);
 }

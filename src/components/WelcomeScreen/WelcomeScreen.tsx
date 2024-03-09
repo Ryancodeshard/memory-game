@@ -23,6 +23,7 @@ const WelcomeScreen = (props: Prop) => {
   const handleClick = () => {
     if (nameRef.current.value === "") {
       selectplayersfx();
+      nameRef.current.focus();
       return;
     }
     setUsername(nameRef.current.value);
@@ -52,6 +53,7 @@ const WelcomeScreen = (props: Prop) => {
       <Flex direction={"column"} align={"center"} gap={5}>
         <Input
           defaultValue={username}
+          autoFocus
           width={"50%"}
           maxW={"200px"}
           placeholder="Username"

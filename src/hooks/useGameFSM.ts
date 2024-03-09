@@ -37,7 +37,7 @@ const useGameFSM = (props:Prop) => {
 
   const {addToLeaderBoard, updateScore} = userStore();
 
-  const calculateResults = () => {
+  const calculateResults = useCallback(() => {
     let res = results;
     for (let i=0;i<=grids.length;i++){
       if (greenSquares[i] && guessSquares.has(i)) res = {...res, correct: res.correct+1}
@@ -45,7 +45,7 @@ const useGameFSM = (props:Prop) => {
       else if (!greenSquares[i] && guessSquares.has(i)) res = {...res, wrong: res.wrong+1}
     }
     return res
-  }
+  },[greenSquares, guessSquares, results, grids.length])
 
   const guessSq = useCallback((index: number) => {
     let gs = guessSquares;
@@ -56,7 +56,7 @@ const useGameFSM = (props:Prop) => {
       else failsfx();
       goToNextState();
     }
-  },[guessSquares,curState, numGreenSquares]);
+  },[guessSquares, curState, numGreenSquares, calculateResults]);
 
   const clearTimer = () => {
     if (interval || timeout) {
@@ -78,13 +78,14 @@ const useGameFSM = (props:Prop) => {
     }, time * 1000);
   };
 
-  const goToNextState = () => {
+  const goToNextState = useCallback(() => {
     setCurStateIndex((prev) => prev + 1);
-  };
+  },[setCurStateIndex]);
 
   const resetGame = () => {
     clearTimer();
     setCurStateIndex(0);
+    setResults({correct:0,wrong:0,missed:0})
   };
 
   useEffect(()=>{
@@ -94,12 +95,15 @@ const useGameFSM = (props:Prop) => {
   },[results, addToLeaderBoard, updateScore])
 
   useEffect(()=>{
-    // Intialisation
     setGrids(Array.from({ length: gridSize ** 2 }, (_, i) => i));
+  },[gridSize])
+
+  useEffect(()=>{
+    // Intialization
     const greens = new Set(shuffle(grids).slice(0, numGreenSquares));
     setGreenSquares(Array.from({ length: gridSize ** 2 }, (_, i) => greens.has(i)))
     setGuessSquares(new Set([]))
-  },[gridSize, numGreenSquares])
+  },[grids, numGreenSquares])
 
   useEffect(() => {
     if (curStateIndex !== -1 && curStateIndex < stateMap.length) {
@@ -126,7 +130,7 @@ const useGameFSM = (props:Prop) => {
     return () => clearTimer();
   }, [curState]);
 
-  return { curState, curTime, resetGame, grids, gridSize, guessSq, greenSquares, guessSquares, results, nextState };
+  return { curState, curTime, resetGame, grids, gridSize, guessSq, greenSquares, guessSquares, results, nextState, goToNextState };
 };
 
 export default useGameFSM;
