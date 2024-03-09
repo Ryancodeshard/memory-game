@@ -1,10 +1,10 @@
 import {
   Button,
+  Switch,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   ModalOverlay,
   Table,
@@ -15,12 +15,47 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  Spacer,
+  IconButton,
+  Flex,
 } from "@chakra-ui/react";
 import { userStore } from "../../store/userStore";
+import { useState } from "react";
+import { StatChart } from "./components/StatChart";
+import { RepeatIcon } from "@chakra-ui/icons";
 
 const Leaderboard = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { leaderboard } = userStore();
+  const [statsMode, setStatsMode] = useState(false);
+  const { resetLeaderboard, leaderboard } = userStore();
+
+  const RowBased = () => {
+    return (
+      <TableContainer>
+        <Table variant="striped" colorScheme="orange">
+          <Thead>
+            <Tr>
+              <Th>Name</Th>
+              <Th>Highest Level</Th>
+              <Th>Time Taken</Th>
+              <Th>Date Acheived</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {leaderboard.map((entry, i) => (
+              <Tr key={i}>
+                <Td>{entry.username}</Td>
+                <Td>{entry.score}</Td>
+                <Td>{entry.time}</Td>
+                <Td>{entry.date}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   return (
     <>
       <Button onClick={onOpen}>Leaderboard</Button>
@@ -30,38 +65,30 @@ const Leaderboard = () => {
         isOpen={isOpen}
         motionPreset="slideInBottom"
       >
-        <ModalOverlay />
-        <ModalContent>
+        <ModalOverlay
+          bg="blackAlpha.300"
+          backdropFilter="blur(10px) hue-rotate(90deg)"
+        />
+        <ModalContent style={{ padding: "10px" }}>
           <ModalHeader>Leaderboard</ModalHeader>
+          <Flex style={{ padding: "0 20px" }}>
+            View Stats
+            <Switch
+              marginLeft={"5px"}
+              isChecked={statsMode}
+              onChange={() => setStatsMode((prev) => !prev)}
+            />
+            <Spacer />
+            <IconButton
+              aria-label="wipe leaderboard"
+              onClick={() => resetLeaderboard()}
+              icon={<RepeatIcon />}
+            />
+          </Flex>
           <ModalCloseButton />
-          <ModalBody>
-            <TableContainer>
-              <Table variant="striped" colorScheme="orange">
-                <Thead>
-                  <Tr>
-                    <Th>Name</Th>
-                    <Th>Highest Level</Th>
-                    <Th>Time Taken</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {leaderboard.map((entry, i) => (
-                    <Tr key={i}>
-                      <Td>{entry.username}</Td>
-                      <Td>{entry.score}</Td>
-                      <Td>{entry.time}</Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
+          <ModalBody maxHeight={"80vh"} overflow={"scroll"}>
+            {statsMode ? <StatChart /> : <RowBased />}
           </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            {/* <Button variant="ghost">Secondary Action</Button> */}
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </>

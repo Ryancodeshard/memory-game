@@ -9,7 +9,7 @@ import { Transition } from "./components/Transition";
 import { Button } from "@chakra-ui/react";
 import countdown from "../../gameSounds/mariostart.mp3";
 import success from "../../gameSounds/mk64_firstplace-1.mp3";
-import selectplayer from "../../gameSounds/mk64_mario_a09_Cm01NqU.mp3";
+import imback from "../../gameSounds/luigi-imma-back.mp3";
 import useSound from "use-sound";
 import { userStore } from "../../store/userStore";
 
@@ -26,7 +26,7 @@ const GameScreen = (props: Prop) => {
   const { setAppState } = props;
   const [beepsfx] = useSound(countdown);
   const [succsfx] = useSound(success);
-  const [selectplayersfx] = useSound(selectplayer);
+  const [imbacksfx] = useSound(imback);
 
   const Levels: { [key: number]: LevelDetails } = {
     1: { gridSize: 3, numGreenSquares: 3 },
@@ -55,7 +55,7 @@ const GameScreen = (props: Prop) => {
   const { username } = userStore();
   useEffect(() => {
     username === "letmewin" && setAppState(AppState.gamesuccess);
-  }, []);
+  }, [setAppState, username]);
   const {
     curState,
     curTime,
@@ -74,7 +74,7 @@ const GameScreen = (props: Prop) => {
     if (curState === GameState.memorize)
       return (
         <Button width="50%" onClick={() => goToNextState()}>
-          I'm already done
+          I have finished memorising
         </Button>
       );
     if (curState === GameState.result) {
@@ -102,7 +102,7 @@ const GameScreen = (props: Prop) => {
             width="50%"
             onClick={() => {
               setAppState(AppState.welcome);
-              selectplayersfx();
+              imbacksfx();
             }}
           >
             Play Again?

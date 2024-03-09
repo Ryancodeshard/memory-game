@@ -2,6 +2,7 @@ import { animated, useTransition } from "@react-spring/web";
 import { AppState } from "../../enums/AppState";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@chakra-ui/react";
+import { userStore } from "../../store/userStore";
 
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
@@ -9,6 +10,7 @@ interface Prop {
 
 const GameSuccessScreen = (prop: Prop) => {
   const { setAppState } = prop;
+  const { username, addToLeaderBoard } = userStore();
   const ref = useRef<ReturnType<typeof setTimeout>[]>([]);
   const [text, setText] = useState<string[]>([]);
 
@@ -17,14 +19,27 @@ const GameSuccessScreen = (prop: Prop) => {
     ref.current = [];
     setText([]);
     ref.current.push(
-      setTimeout(() => setText(["Congrats", "you", "beat", "the game!"]), 2000)
-    );
-    ref.current.push(
-      setTimeout(() => setText(["Congrats", "you", "the game!"]), 5000)
+      setTimeout(
+        () => setText(["Congrats", `${username},`, "you", "beat", "the game!"]),
+        2000
+      )
     );
     ref.current.push(
       setTimeout(
-        () => setText(["Congrats", "you", "destroyed", "the game!"]),
+        () => setText(["Congrats", `${username},`, "you", "the game!"]),
+        5000
+      )
+    );
+    ref.current.push(
+      setTimeout(
+        () =>
+          setText([
+            "Congrats",
+            `${username},`,
+            "you",
+            "destroyed",
+            "the game!",
+          ]),
         8000
       )
     );
@@ -34,6 +49,10 @@ const GameSuccessScreen = (prop: Prop) => {
     reset();
     return () => ref.current.forEach(clearTimeout);
   }, [reset]);
+
+  useEffect(() => {
+    addToLeaderBoard();
+  }, []);
 
   const transitions = useTransition(text, {
     from: {

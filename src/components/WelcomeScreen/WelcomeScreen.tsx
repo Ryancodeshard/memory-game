@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import "./index.css"; // Import CSS file for styling
+import "./index.css";
 import { AppState } from "../../enums/AppState";
 import { Flex, Input } from "@chakra-ui/react";
 import { userStore } from "../../store/userStore";

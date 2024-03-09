@@ -105,9 +105,8 @@ const useGameFSM = (props:Prop) => {
   },[grids, numGreenSquares])
 
   useEffect(() => {
-    if (curStateIndex !== -1 && curStateIndex < stateMap.length) {
+    if (curStateIndex !== -1 && curStateIndex < stateMap.length)
       setCurState(stateMap[curStateIndex]);
-    }
   }, [curStateIndex, stateMap]);
 
   useEffect(() => {
