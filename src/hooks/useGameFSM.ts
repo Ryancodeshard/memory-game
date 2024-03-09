@@ -85,7 +85,6 @@ const useGameFSM = (props:Prop) => {
   const resetGame = () => {
     clearTimer();
     setCurStateIndex(0);
-    setResults({correct:0,wrong:0,missed:0})
   };
 
   useEffect(()=>{
