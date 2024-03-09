@@ -74,7 +74,7 @@ const GameScreen = (props: Prop) => {
     if (curState === GameState.memorize)
       return (
         <Button width="50%" onClick={() => goToNextState()}>
-          I have finished memorising
+          Guess now
         </Button>
       );
     if (curState === GameState.result) {

@@ -1,9 +1,6 @@
 import { useTransition, animated } from "@react-spring/web";
 
 import "./index.css";
-import { useEffect } from "react";
-
-import useSound from "use-sound";
 interface Prop {
   curTime: number;
   nextState: string;
