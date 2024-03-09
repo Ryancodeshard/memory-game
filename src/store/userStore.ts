@@ -35,8 +35,8 @@ export const userStore = create(persist<UserState & Action>((set) => ({
     addToLeaderBoard: () => {
       set((state)=>{
         let newLeaderboard = state.leaderboard;
-        const index = newLeaderboard.findIndex(obj => (obj.score>state.curScore.score || (obj.score===state.curScore.score && obj.time>state.curScore.time)));
-        newLeaderboard.splice(index+1, 0, {username: state.username, ...state.curScore});
+        const index = newLeaderboard.findIndex(obj => (obj.score<state.curScore.score || (obj.score===state.curScore.score && obj.time>state.curScore.time)));
+        newLeaderboard.splice(index===-1?state.leaderboard.length:index, 0, {username: state.username, ...state.curScore});
         return {leaderboard: newLeaderboard}
       })
     },
