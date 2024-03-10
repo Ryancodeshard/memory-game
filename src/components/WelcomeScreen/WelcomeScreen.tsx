@@ -6,9 +6,10 @@ import { userStore } from "../../store/userStore";
 import { Leaderboard } from "../LeaderBoard";
 import startSfx from "../../gameSounds/luigi-here-we-go.mp3";
 import countdown from "../../gameSounds/mariostart.mp3";
-import selectplayer from "../../gameSounds/mk64_mario_a09_Cm01NqU.mp3";
+// import selectplayer from "../../gameSounds/mk64_mario_a09_Cm01NqU.mp3";
 import useSound from "use-sound";
 
+const selectplayer = require("../../gameSounds/mk64_mario_a09_Cm01NqU.mp3");
 interface Prop {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
 }
