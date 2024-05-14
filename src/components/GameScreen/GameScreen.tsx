@@ -62,7 +62,7 @@ const GameScreen = (props: Prop) => {
     }
   }
 
-  const [curLevel, setCurLevel] = useState<number>(20);
+  const [curLevel, setCurLevel] = useState<number>(1);
   const { username } = userStore();
   useEffect(() => {
     username === "letmewin" && setAppState(AppState.gamesuccess);
