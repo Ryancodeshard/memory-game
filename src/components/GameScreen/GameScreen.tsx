@@ -29,16 +29,16 @@ const GameScreen = (props: Prop) => {
   const [imbacksfx] = useSound(imback);
 
   const Levels: { [key: number]: LevelDetails } = {
-    1: { gridSize: 3, numGreenSquares: 3 },
-    2: { gridSize: 3, numGreenSquares: 4 },
-    3: { gridSize: 4, numGreenSquares: 4 },
-    4: { gridSize: 4, numGreenSquares: 5 },
-    5: { gridSize: 4, numGreenSquares: 6 },
-    6: { gridSize: 5, numGreenSquares: 5 },
-    7: { gridSize: 5, numGreenSquares: 6 },
-    8: { gridSize: 5, numGreenSquares: 7 },
-    9: { gridSize: 6, numGreenSquares: 6 },
-    10: { gridSize: 7, numGreenSquares: 7 },
+    // 1: { gridSize: 3, numGreenSquares: 3 },
+    // 2: { gridSize: 3, numGreenSquares: 4 },
+    // 3: { gridSize: 4, numGreenSquares: 4 },
+    // 4: { gridSize: 4, numGreenSquares: 5 },
+    // 5: { gridSize: 4, numGreenSquares: 6 },
+    // 6: { gridSize: 5, numGreenSquares: 5 },
+    // 7: { gridSize: 5, numGreenSquares: 6 },
+    // 8: { gridSize: 5, numGreenSquares: 7 },
+    // 9: { gridSize: 6, numGreenSquares: 6 },
+    // 10: { gridSize: 7, numGreenSquares: 7 },
   };
   // Level 1: 3x3 grid, 3 green squares
   // Level 2: 3x3 grid, 4 green squares
@@ -51,7 +51,18 @@ const GameScreen = (props: Prop) => {
   // Level 9: 6x6 grid, 6 green squares
   // Level 10: 7x7 grid, 7 green squares
 
-  const [curLevel, setCurLevel] = useState<number>(1);
+  let count = 1;
+  for (let i = 0; i < 10; i++) {
+    for (let j = 0; j < i + 2; j++) {
+      Levels[count] = {
+        gridSize: i + 3,
+        numGreenSquares: i + j + 3,
+      };
+      count++;
+    }
+  }
+
+  const [curLevel, setCurLevel] = useState<number>(20);
   const { username } = userStore();
   useEffect(() => {
     username === "letmewin" && setAppState(AppState.gamesuccess);
