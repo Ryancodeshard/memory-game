@@ -3,4 +3,5 @@ export default interface Player {
   created_at?: Date;
   username: string;
   score: number;
+  time: number;
 }

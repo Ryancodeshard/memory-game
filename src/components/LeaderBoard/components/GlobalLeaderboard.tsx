@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../../client/supabaseClient";
 import Player from "../../../interfaces/Player";
 
-function App() {
-  const [players, setPlayers] = useState<Player[]>([]);
+function GlobalLeaderboard() {
+  const [players, setPlayers] = useState<any>([]);
 
   useEffect(() => {
     getplayers();
+    console.log(players);
   }, []);
 
   async function getplayers() {
@@ -15,12 +16,9 @@ function App() {
   }
 
   return (
-    <ul>
-      {players.map((player) => (
-        <li key={player.username}>{player.username}</li>
-      ))}
-    </ul>
+    // <RowBased leaderboard=/>
+    <></>
   );
 }
 
-export default App;
+export default GlobalLeaderboard;

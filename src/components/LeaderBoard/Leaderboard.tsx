@@ -18,49 +18,23 @@ import {
   Spacer,
   IconButton,
   Flex,
-  Tabs,
-  TabList,
-  TabPanels,
   Tab,
+  TabList,
   TabPanel,
+  TabPanels,
+  Tabs,
 } from "@chakra-ui/react";
 import { userStore } from "../../store/userStore";
 import { useState } from "react";
 import { StatChart } from "./components/StatChart";
 import { RepeatIcon } from "@chakra-ui/icons";
+import RowBased from "./components/RowBased";
 import GlobalLeaderboard from "./components/GlobalLeaderboard";
 
 const Leaderboard = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [statsMode, setStatsMode] = useState(false);
   const { resetLeaderboard, leaderboard } = userStore();
-
-  const RowBased = () => {
-    return (
-      <TableContainer>
-        <Table variant="striped" colorScheme="orange">
-          <Thead>
-            <Tr>
-              <Th>Name</Th>
-              <Th>Highest Level</Th>
-              <Th>Time Taken</Th>
-              <Th>Date Acheived</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {leaderboard.map((entry, i) => (
-              <Tr key={i}>
-                <Td>{entry.username}</Td>
-                <Td>{entry.score}</Td>
-                <Td>{entry.time}</Td>
-                <Td>{entry.date}</Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      </TableContainer>
-    );
-  };
 
   return (
     <>
@@ -103,7 +77,11 @@ const Leaderboard = () => {
                 </Flex>
                 <ModalCloseButton />
                 <ModalBody maxHeight={"80vh"} overflow={"scroll"}>
-                  {statsMode ? <StatChart /> : <RowBased />}
+                  {statsMode ? (
+                    <StatChart />
+                  ) : (
+                    <RowBased leaderboard={leaderboard} />
+                  )}
                 </ModalBody>
               </TabPanel>
               <TabPanel>
