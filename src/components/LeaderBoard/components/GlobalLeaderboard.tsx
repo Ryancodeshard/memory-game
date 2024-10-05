@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../../client/supabaseClient";
 import Player from "../../../interfaces/Player";
+import RowBased from "./RowBased";
 
 function GlobalLeaderboard() {
-  const [players, setPlayers] = useState<any>([]);
+  const [players, setPlayers] = useState<Player[]>([]);
 
   useEffect(() => {
     getplayers();
@@ -16,8 +17,9 @@ function GlobalLeaderboard() {
   }
 
   return (
-    // <RowBased leaderboard=/>
-    <></>
+    <>
+      <RowBased leaderboard={players} />
+    </>
   );
 }
 

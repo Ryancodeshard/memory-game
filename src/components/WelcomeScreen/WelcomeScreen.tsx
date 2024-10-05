@@ -26,7 +26,7 @@ const WelcomeScreen = (props: Prop) => {
       nameRef.current.focus();
       return;
     }
-    setUsername(nameRef.current.value);
+    if (username !== nameRef.current.value) setUsername(nameRef.current.value);
     setAppState(AppState.playing);
     resetScore();
     herewego();

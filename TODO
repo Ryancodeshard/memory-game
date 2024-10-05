@@ -1,0 +1,3 @@
+Save score -> generate uuid if not in cache, then use that as player id to save it 
+Display score -> Display the user's current score as a floating entry
+Multiplayer -> Use websockets to establish connection using connection string saved in database/Use supabase presence

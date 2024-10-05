@@ -18,7 +18,7 @@ const RowBased = ({ leaderboard }: { leaderboard: Player[] }) => {
             <Th>Name</Th>
             <Th>Highest Level</Th>
             <Th>Time Taken</Th>
-            <Th>Date Acheived</Th>
+            <Th>Date Achieved</Th>
           </Tr>
         </Thead>
         <Tbody>
